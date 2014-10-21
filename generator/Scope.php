@@ -37,7 +37,7 @@ class Scope {
 	private function deepLookup($context, array $chain) {
 		$currentKey = array_shift($chain);
 
-		if (!isset($context[$currentKey])) {
+		if (!array_key_exists($currentKey, $context)) {
 			if ($currentKey === 'length') {
 				return count($context);
 			}

@@ -87,7 +87,6 @@ class ForLoop implements Parser {
 
 		$this->scope->push($currentFor['alias'], $currentFor['loopedValue'][$currentFor['loopIndex']]);
 		$this->file->toPosition($currentFor['filePosition']);
-		$this->file->getLine();
 	}
 
 	private function handleContinue($line) {
@@ -97,7 +96,7 @@ class ForLoop implements Parser {
 		$result = ConditionHelper::evaluate($condition);
 
 		if (true === $result) {
-			$this->handleEnding();
+			$this->handleEnding($line);
 		}
 	}
 

@@ -3,8 +3,8 @@
 class ConditionHelper {
 
 	public static function evaluate($expression) {
-		if (!preg_match('/(\S+)\s*(\=|\>|\<)\s*(\S+)/', $condition, $matches)) {
-			throw new Exception("Cannot parse condition: $condition");
+		if (!preg_match('/(\S+)\s*(\=|\>|\<)\s*(\S+)/', $expression, $matches)) {
+			throw new Exception("Cannot parse condition: $expression");
 		}
 
 		if (is_numeric($matches[1])) {

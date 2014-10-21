@@ -25,10 +25,10 @@ $pages 			= new PageCollection;
 $interpolation 	= new Interpolation($scope);
 
 $parsers = array(
-	new FreebaseLookup($file, $scope, $freebase, $interpolation),
 	new ForLoop($file, $scope, $interpolation),
 	new Page($pages, $interpolation),
 	new AbortPage($pages, $interpolation),
+	new FreebaseLookup($file, $scope, $freebase, $interpolation),
 	new PageLine($pages, $interpolation),
 );
 
