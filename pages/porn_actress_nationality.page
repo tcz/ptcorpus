@@ -19,12 +19,13 @@ For: country in countries-over-1m
 		actresses = [{
 		  "profession": "Pornographic film actor",
 		  "limit": 25,
-		  "name": null,
+		  "*": null,
 		  "gender": "female",
 		  "type": "/people/person",
 		  "nationality": [{
 		    "name": ":::country.name"
-		  }]
+		  }],
+		  "/common/topic/alias": []
 		}]
 
 		AbortPage: :::actresses.length < 5
@@ -37,6 +38,7 @@ For: country in countries-over-1m
 
 		For: actress in actresses
 			<h2>:::actress.name</h2>
+			<p>:::quickbio(actress)</p>
 		:EndFor
 
 	:EndPage

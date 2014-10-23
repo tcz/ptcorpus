@@ -17,12 +17,15 @@ require_once __DIR__ . '/Parsers/ForLoop.php';
 require_once __DIR__ . '/Parsers/Page.php';
 require_once __DIR__ . '/Parsers/PageLine.php';
 require_once __DIR__ . '/Parsers/AbortPage.php';
+require_once __DIR__ . '/UserFunction/QuickBio.php';
 
 $file 			= new File;
 $scope 			= new Scope;
 $freebase 		= new Freebase;
 $pages 			= new PageCollection;
 $interpolation 	= new Interpolation($scope);
+
+$interpolation->registerFunction(new QuickBio);
 
 $parsers = array(
 	new ForLoop($file, $scope, $interpolation),
