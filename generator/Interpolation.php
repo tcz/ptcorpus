@@ -8,7 +8,22 @@ class Interpolation {
 	}
 
 	public function apply($string) {
-		$regex = '/' . preg_quote(self::PREFIX, '/') . '([a-zA-Z0-9\/\.\-\_\(\)\,]+)/';
+		$quoted_prefix = preg_quote(self::PREFIX, '/');
+		$idenfitifer = "a-zA-Z0-9\/\.\-\_";
+		$regex = <<<REGEX
+			/
+			$quoted_prefix
+			( 							# capturing the whole expression
+				[$idenfitifer]+			# function or variable name
+				(						# optional argument list (for a function)
+					\(
+					([$idenfitifer\,\'\s]+)?
+					\)
+				)?
+			)
+			/x
+REGEX;
+
 		if (!preg_match($regex, $string, $matches)) {
 			return $string;
 		}
@@ -27,8 +42,14 @@ class Interpolation {
 				$function = $functions[$function];
 
 				$variables = substr($matches[1], strpos($matches[1], '(') + 1, -1);
-				$variables = explode(",", $variables);
+				$variables = preg_split("/\s*,\s*/", $variables);
+
 				$variables = array_map(function($variable) use ($scope) {
+					$variable = trim($variable);
+					// String literal
+					if (preg_match("/^'(.*)'$/", $variable, $matches)) {
+						return $matches[1];
+					}
 					return $scope->lookup($variable);
 				}, $variables);
 
