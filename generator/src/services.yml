@@ -2,6 +2,8 @@ services:
 
     ptcorpus.userfunction.render:
         class: Ptcorpus\UserFunction\Render
+        calls:
+            - ['setContainer', ['@service_container']]
 
     ptcorpus.interpolation:
         class: Ptcorpus\Interpolation

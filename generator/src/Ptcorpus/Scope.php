@@ -3,8 +3,13 @@
 namespace Ptcorpus;
 
 class Scope {
-	private $scopeLayers = array(array());
+	private $scopeLayers;
 	private $layerPointer = 0;
+
+	public function __construct(array $initialValues = array())
+	{
+		$this->scopeLayers = array($initialValues);
+	}
 
 	public function push($name, $value) {
 		$this->scopeLayers[$this->layerPointer][$name] = $value;

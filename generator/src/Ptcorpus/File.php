@@ -9,8 +9,7 @@ class File {
 
 	public function open($path) {
 		if (!is_file($path)) {
-			echo "File $file not found.";
-			exit(-1);
+			throw new \RuntimeException("File $path not found.");
 		}
 		$this->handle = fopen($path, 'r');
 		$this->lineNo = 0;

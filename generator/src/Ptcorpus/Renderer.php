@@ -30,7 +30,7 @@ class Renderer
 				}
 			}
 		} catch (\Exception $e) {
-			throw new Exception("Error while parsing {$file->getPath()}:" . $file->getLineNo() . "; " . $e->getMessage(), 0, $e);
+			throw new \Exception("Error while parsing {$file->getPath()}:" . $file->getLineNo() . "; " . $e->getMessage(), 0, $e);
 		}
 
 		return $pages;

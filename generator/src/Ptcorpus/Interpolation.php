@@ -25,7 +25,7 @@ class Interpolation {
 				[$idenfitifer]+			# function or variable name
 				(						# optional argument list (for a function)
 					\(
-					([$idenfitifer\,\'\s]+)?
+					([$idenfitifer\,\'\s\:]+)?
 					\)
 				)?
 			)
@@ -51,17 +51,28 @@ REGEX;
 
 				$variables = substr($matches[1], strpos($matches[1], '(') + 1, -1);
 				$variables = preg_split("/\s*,\s*/", $variables);
+				$variableNamespace = array();
 
-				$variables = array_map(function($variable) use ($scope) {
+				foreach ($variables as $variable)
+				{
+					$variableParts = preg_split("/\s*:\s*/", $variable);
+					if (2 !== count($variableParts)) {
+						continue;
+					}
+
+					$variableNamespace[$variableParts[0]] = $variableParts[1];
+				}
+
+				$variableNamespace = array_map(function($variable) use ($scope) {
 					$variable = trim($variable);
 					// String literal
 					if (preg_match("/^'(.*)'$/", $variable, $matches)) {
 						return $matches[1];
 					}
 					return $scope->lookup($variable);
-				}, $variables);
+				}, $variableNamespace);
 
-				return call_user_func_array(array($function, 'call'), $variables);
+				return call_user_func_array(array($function, 'call'), array($variableNamespace));
 			}
 			return $scope->lookup($matches[1]);
 		}, $string);

@@ -2,7 +2,11 @@
 
 namespace Ptcorpus\UserFunction;
 
-interface UserFunction {
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+interface UserFunction
+{
 	public function getName();
-	public function call();
+	public function call(array $variables);
+	public function setContainer(ContainerInterface $container);
 }
