@@ -1,0 +1,47 @@
+{% set countries_over_1m = freebase('[{
+  "limit": 1,
+  "/location/statistical_region/population": [{
+    "number>": 1000000,
+    "limit": 1,
+    "number": null
+  }],
+  "name": null,
+  "type": "/location/country",
+  "/location/location/adjectival_form": []
+}]') %}
+
+{% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
+
+	{% set actresses = freebase('[{
+	  "profession": "Pornographic film actor",
+	  "limit": 25,
+	  "*": null,
+	  "gender": "female",
+	  "type": "/people/person",
+	  "nationality": [{
+	    "name": "' ~ country.name ~ '",
+	    "/location/location/adjectival_form": []
+	  }],
+	  "/common/topic/alias": []
+	}]') %}
+
+	{% if actresses|length >= 5 %}
+
+		{% page country['/location/location/adjectival_form'].0 ~ ' porn actresses' %}
+
+			<h1>
+				{{ country['/location/location/adjectival_form'].0 }} porn actresses
+			</h1>
+
+			<p>Here are {{ actresses|length }} famous porn actresses from {{ country.name }}</p>
+
+			{% for actress in actresses %}
+				<h2>{{ actress.name }}</h2>
+				<p>{% include 'quickbio.twig' with {'person': actress} %}</p>
+			{% endfor %}
+
+		{% endpage %}
+
+	{% endif %}
+
+{% endfor %}

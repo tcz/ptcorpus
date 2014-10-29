@@ -1,25 +1,38 @@
+parameters:
+    templates_path: %base_path%/../pages
+    templates_cache: /tmp/twig
+
 services:
+    ptcorpus.twig.loader:
+        class: Twig_Loader_Filesystem
+        arguments:
+            - %templates_path%
 
-    ptcorpus.userfunction.render:
-        class: Ptcorpus\UserFunction\Render
+    ptcorpus.twig:
+        class: Twig_Environment
+        arguments:
+            - @ptcorpus.twig.loader
+            - [cache: %templates_cache%]
         calls:
-            - ['setContainer', ['@service_container']]
-
-    ptcorpus.interpolation:
-        class: Ptcorpus\Interpolation
-        calls:
-            - ['registerFunction', ['@ptcorpus.userfunction.render']]
+            - ['addExtension', [@ptcorpus.twig.extension.freebase]]
+            - ['addExtension', [@ptcorpus.twig.extension.page]]
+            - ['addExtension', [@ptcorpus.twig.extension.grammar]]
 
     ptcorpus.freebase:
         class: Ptcorpus\Freebase
 
-    ptcorpus.parser_factory:
-        class: Ptcorpus\ParserFactory
-        arguments:
-            - @ptcorpus.interpolation
-            - @ptcorpus.freebase
-
     ptcorpus.renderer:
         class: Ptcorpus\Renderer
         arguments:
-            - @ptcorpus.parser_factory
+            - @ptcorpus.twig
+
+    ptcorpus.twig.extension.freebase:
+        class: Ptcorpus\Twig\FreebaseExtension
+        arguments:
+            - @ptcorpus.freebase
+
+    ptcorpus.twig.extension.page:
+        class: Ptcorpus\Twig\PageExtension
+
+    ptcorpus.twig.extension.grammar:
+        class: Ptcorpus\Twig\GrammarExtension

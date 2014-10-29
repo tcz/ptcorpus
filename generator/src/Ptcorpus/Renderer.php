@@ -2,37 +2,24 @@
 
 namespace Ptcorpus;
 
+use Twig_Environment as Twig;
+
 class Renderer
 {
-	public function __construct(ParserFactory $parserFactory)
+	public function __construct(Twig $twig)
 	{
-		$this->parserFactory 	= $parserFactory;
+		$this->twig = $twig;
 	}
 
-	public function render(File $file, Scope $scope = null)
+	public function render($file)
 	{
-		if (!$scope) {
-			$scope = new Scope;
-		}
+		$template = $this->twig->loadTemplate($file);
+		$renderedPage = $template->render(array());
 
-		$pages 		= new PageCollection;
-		$parsers 	= $this->parserFactory->create($file, $scope, $pages);
-
-		try {
-			while (!$file->hasEnded()) {
-				$line = $file->getLine();
-
-				foreach ($parsers as $parser) {
-					if ($parser->canHandle($line)) {
-						$parser->handle($line);
-						break;
-					}
-				}
-			}
-		} catch (\Exception $e) {
-			throw new \Exception("Error while parsing {$file->getPath()}:" . $file->getLineNo() . "; " . $e->getMessage(), 0, $e);
-		}
-
-		return $pages;
+		return array(array(
+			'content' => $renderedPage,
+			'title' => 'test',
+			'url' => 'test.html'
+		));
 	}
 }

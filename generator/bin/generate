@@ -9,23 +9,21 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 $container 		= new ContainerBuilder();
+$container->setParameter('base_path', __DIR__.'/../');
 $loader 		= new YamlFileLoader($container, new FileLocator(array(__DIR__ . '/../src')));
 
 $loader->load('services.yml');
 
-$templatePath = $argv[1];
+$file = $argv[1];
 $destination = $argv[2];
 
 if (!is_dir($destination)) {
 	throw new Exception("$destination must be a directory");
 }
 
-$file = new Ptcorpus\File;
-$file->open($templatePath);
-
 $renderer = $container->get('ptcorpus.renderer');
-$pageCollection = $renderer->render($file);
-$pages = $pageCollection->getPages();
+$pages = $renderer->render($file);
+
 
 foreach ($pages as $page) {
 	$path = rtrim($destination, '/') . '/' . $page['url'];
