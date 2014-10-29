@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/UserFunction.php');
+namespace Ptcorpus\UserFunction;
 
 class Render implements UserFunction {
 	public function getName() {

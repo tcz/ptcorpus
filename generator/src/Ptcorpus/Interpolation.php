@@ -1,18 +1,26 @@
 <?php
 
+namespace Ptcorpus;
+
+use Ptcorpus\UserFunction\UserFunction;
+
 class Interpolation {
 	const PREFIX = ':::';
 
-	public function __construct(Scope $scope) {
+	public function setScope(Scope $scope) {
 		$this->scope = $scope;
 	}
 
 	public function apply($string) {
-		$quoted_prefix = preg_quote(self::PREFIX, '/');
+		if (!$this->scope) {
+			throw new \LogicException("No scope set");
+		}
+
+		$quotedPrefix = preg_quote(self::PREFIX, '/');
 		$idenfitifer = "a-zA-Z0-9\/\.\-\_";
 		$regex = <<<REGEX
 			/
-			$quoted_prefix
+			$quotedPrefix
 			( 							# capturing the whole expression
 				[$idenfitifer]+			# function or variable name
 				(						# optional argument list (for a function)

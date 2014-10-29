@@ -1,7 +1,10 @@
 <?php
 
-require_once(__DIR__.'/Parser.php');
-require_once(__DIR__.'/../ConditionHelper.php');
+namespace Ptcorpus\Parsers;
+
+use Ptcorpus\PageCollection;
+use Ptcorpus\Interpolation;
+use Ptcorpus\ConditionHelper;
 
 class AbortPage implements Parser {
 

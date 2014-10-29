@@ -1,0 +1,19 @@
+{
+    "name": "tcz/ptcorpus",
+    "version": "1.0.0-beta",
+    "type": "project",
+    "description": "Generating content pages from Freebase to be served by Jekyll.",
+    "keywords": ["freebase","jekyll","content"],
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=5.3",
+        "symfony/dependency-injection": "*",
+        "symfony/config": "*",
+        "symfony/yaml": "*"
+	},
+    "autoload": {
+        "psr-4": {
+            "Ptcorpus\\": "src/Ptcorpus/"
+        }
+    }
+}

@@ -1,8 +1,11 @@
 <?php
 
+namespace Ptcorpus;
+
 class File {
 	private $handle;
 	private $lineNo;
+	private $path;
 
 	public function open($path) {
 		if (!is_file($path)) {
@@ -32,5 +35,9 @@ class File {
 
 	public function toPosition($position) {
 		return fseek($this->handle, $position);
+	}
+
+	public function getPath() {
+		return $this->path;
 	}
 }

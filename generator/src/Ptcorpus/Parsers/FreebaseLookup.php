@@ -1,6 +1,11 @@
 <?php
 
-require_once(__DIR__.'/Parser.php');
+namespace Ptcorpus\Parsers;
+
+use Ptcorpus\File;
+use Ptcorpus\Scope;
+use Ptcorpus\Interpolation;
+use Ptcorpus\Freebase;
 
 class FreebaseLookup implements Parser {
 

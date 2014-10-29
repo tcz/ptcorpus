@@ -1,6 +1,9 @@
 <?php
 
-require_once(__DIR__.'/Parser.php');
+namespace Ptcorpus\Parsers;
+
+use Ptcorpus\PageCollection;
+use Ptcorpus\Interpolation;
 
 class PageLine implements Parser {
 

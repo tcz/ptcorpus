@@ -1,5 +1,7 @@
 <?php
 
+namespace Ptcorpus;
+
 class Scope {
 	private $scopeLayers = array(array());
 	private $layerPointer = 0;

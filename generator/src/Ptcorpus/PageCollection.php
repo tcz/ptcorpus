@@ -1,5 +1,7 @@
 <?php
 
+namespace Ptcorpus;
+
 class PageCollection {
 	private $pages = array();
 	private $currentPage;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Ptcorpus;
+
 class Freebase {
 	const API_KEY = 'AIzaSyBpe_wWFnUMBI5MtMyr6JvnEP4N6OQF4hg';
 	const BASE_URL = 'https://www.googleapis.com/freebase/v1/mqlread?lang=%2Flang%2Fen';

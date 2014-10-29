@@ -1,0 +1,41 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+$container 		= new ContainerBuilder();
+$loader 		= new YamlFileLoader($container, new FileLocator(array(__DIR__ . '/../src')));
+
+$loader->load('services.yml');
+
+$templatePath = $argv[1];
+$destination = $argv[2];
+
+if (!is_dir($destination)) {
+	throw new Exception("$destination must be a directory");
+}
+
+$file = new Ptcorpus\File;
+$file->open($templatePath);
+
+$renderer = $container->get('ptcorpus.renderer');
+$pageCollection = $renderer->render($file);
+$pages = $pageCollection->getPages();
+
+foreach ($pages as $page) {
+	$path = rtrim($destination, '/') . '/' . $page['url'];
+	file_put_contents($path, <<<CONTENT
+---
+title: {$page['title']}
+layout: post
+---
+
+{$page['content']}
+CONTENT
+	);
+}

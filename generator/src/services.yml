@@ -1,0 +1,23 @@
+services:
+
+    ptcorpus.userfunction.render:
+        class: Ptcorpus\UserFunction\Render
+
+    ptcorpus.interpolation:
+        class: Ptcorpus\Interpolation
+        calls:
+            - ['registerFunction', ['@ptcorpus.userfunction.render']]
+
+    ptcorpus.freebase:
+        class: Ptcorpus\Freebase
+
+    ptcorpus.parser_factory:
+        class: Ptcorpus\ParserFactory
+        arguments:
+            - @ptcorpus.interpolation
+            - @ptcorpus.freebase
+
+    ptcorpus.renderer:
+        class: Ptcorpus\Renderer
+        arguments:
+            - @ptcorpus.parser_factory

@@ -1,5 +1,7 @@
 <?php
 
+namespace Ptcorpus;
+
 class ConditionHelper {
 
 	public static function evaluate($expression) {
