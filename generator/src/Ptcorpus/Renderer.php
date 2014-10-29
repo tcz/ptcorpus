@@ -14,12 +14,20 @@ class Renderer
 	public function render($file)
 	{
 		$template = $this->twig->loadTemplate($file);
-		$renderedPage = $template->render(array());
+		$renderedPages = $template->render(array());
 
-		return array(array(
-			'content' => $renderedPage,
-			'title' => 'test',
-			'url' => 'test.html'
-		));
+		$renderedPages = explode("---------------", $renderedPages);
+		$pages = array();
+		while ($renderedPages) {
+			$metadata = array_shift($renderedPages);
+			$content = array_shift($renderedPages);
+
+			$metadata = (array) json_decode($metadata, true);
+			$page = $metadata + array('content' => $content);
+
+			$pages[] = $page;
+		}
+
+		return $pages;
 	}
 }

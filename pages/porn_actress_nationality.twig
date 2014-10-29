@@ -27,7 +27,11 @@
 
 	{% if actresses|length >= 5 %}
 
-		{% page country['/location/location/adjectival_form'].0 ~ ' porn actresses' %}
+		{% page
+			title country['/location/location/adjectival_form'].0 ~ ' porn actresses'
+			keywords ['porn', 'actress', actresses.0.name, actresses.2.name, country.name]
+			description "List of the top " ~ actresses|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' erotic movie actresses'
+		%}
 
 			<h1>
 				{{ country['/location/location/adjectival_form'].0 }} porn actresses
