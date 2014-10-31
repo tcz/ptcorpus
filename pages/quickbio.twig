@@ -1,3 +1,28 @@
+{% import "macros.twig" as macros %}
+
 <strong>{{ person.name }}</strong>
-also known as {{ orconcat(person['/common/topic/alias']) }}
-is a {{ person.nationality['/location/location/adjectival_form'].0 }}
+{# Date of birth and date of death #}
+{% if person.date_of_birth is known %}
+(
+	{{- nicedate(person.date_of_birth) }}
+	{% if person.place_of_birth is known %}
+		{{ person.place_of_birth }}
+	{% endif %}
+	-
+	{% if person['/people/deceased_person/date_of_death'] is known %}
+		{{ nicedate(person['/people/deceased_person/date_of_death']) }}
+		{% if person['/people/deceased_person/place_of_death'] is known %}
+			{{ person['/people/deceased_person/place_of_death'] }}
+		{% endif %}
+	{% endif -%}
+)
+{% endif %}
+
+{% if person['/common/topic/alias'] is known %}
+	also known as {{ orconcat(person['/common/topic/alias']) }}
+{% endif %}
+
+{# Nationality and profession #}
+{{ macros.isOrWas(person) }}
+{{ singular(person.nationality[0]['/location/location/adjectival_form'].0) }}
+{{ lower(andconcat(person.profession)) }}.

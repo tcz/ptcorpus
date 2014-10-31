@@ -13,7 +13,8 @@
 {% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
 
 	{% set actresses = freebase('[{
-	  "profession": "Pornographic film actor",
+	  "ns0:profession": "Pornographic film actor",
+	  "profession": [],
 	  "limit": 25,
 	  "*": null,
 	  "gender": "female",
@@ -22,7 +23,9 @@
 	    "name": "' ~ country.name ~ '",
 	    "/location/location/adjectival_form": []
 	  }],
-	  "/common/topic/alias": []
+	  "/common/topic/alias": [],
+	  "/people/deceased_person/date_of_death": null,
+	  "/people/deceased_person/place_of_death": null
 	}]') %}
 
 	{% if actresses|length >= 5 %}

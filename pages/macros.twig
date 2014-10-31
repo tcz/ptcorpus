@@ -1,0 +1,7 @@
+{% macro isOrWas(person) %}
+	{%- if person['/people/deceased_person/date_of_death'] is known -%}
+		was
+	{%- else -%}
+		is
+	{%- endif -%}
+{% endmacro %}

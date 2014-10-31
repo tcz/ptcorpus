@@ -12,11 +12,12 @@ services:
         class: Twig_Environment
         arguments:
             - @ptcorpus.twig.loader
-            - [cache: %templates_cache%]
+            #- {'cache': %templates_cache%}
         calls:
             - ['addExtension', [@ptcorpus.twig.extension.freebase]]
             - ['addExtension', [@ptcorpus.twig.extension.page]]
             - ['addExtension', [@ptcorpus.twig.extension.grammar]]
+            - ['addExtension', [@ptcorpus.twig.extension.known]]
 
     ptcorpus.freebase:
         class: Ptcorpus\Freebase
@@ -36,3 +37,6 @@ services:
 
     ptcorpus.twig.extension.grammar:
         class: Ptcorpus\Twig\GrammarExtension
+
+    ptcorpus.twig.extension.known:
+        class: Ptcorpus\Twig\KnownExtension
