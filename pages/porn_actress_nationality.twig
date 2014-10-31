@@ -37,7 +37,7 @@
 		%}
 
 			<h1>
-				{{ country['/location/location/adjectival_form'].0 }} porn actresses
+				{{ country['/location/location/adjectival_form'].0 }} {{ vary(country.name, {'porn': 1, 'porn movie': 1}) }} actresses
 			</h1>
 
 			<p>Here are {{ actresses|length }} famous porn actresses from {{ country.name }}</p>

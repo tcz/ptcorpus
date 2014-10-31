@@ -18,8 +18,15 @@
 )
 {% endif %}
 
+{# Alias #}
 {% if person['/common/topic/alias'] is known %}
+	{% vary person.name %}
 	also known as {{ orconcat(person['/common/topic/alias']) }}
+	{% v 0.5 %}
+	a.k.a. {{ orconcat(person['/common/topic/alias']) }}
+	{% v 0.2 %}
+	otherwise known as {{ orconcat(person['/common/topic/alias']) }}
+	{% endvary %}
 {% endif %}
 
 {# Nationality and profession #}
