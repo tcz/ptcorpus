@@ -26,10 +26,13 @@ $pages = $renderer->render($file);
 
 
 foreach ($pages as $page) {
+	$page['keywords'] = implode(', ', $page['keywords']);
 	$path = rtrim($destination, '/') . '/' . $page['url'];
 	file_put_contents($path, <<<CONTENT
 ---
 title: {$page['title']}
+keywords: {$page['keywords']}
+description: {$page['description']}
 layout: post
 ---
 

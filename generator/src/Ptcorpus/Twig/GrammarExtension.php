@@ -11,7 +11,9 @@ class GrammarExtension extends \Twig_Extension
             new \Twig_SimpleFunction('andconcat', array($this, 'andConcat')),
             new \Twig_SimpleFunction('singular', array($this, 'singular')),
             new \Twig_SimpleFunction('lower', array($this, 'lower')),
+            new \Twig_SimpleFunction('title', array($this, 'title')),
             new \Twig_SimpleFunction('nicedate', array($this, 'niceDate')),
+            new \Twig_SimpleFunction('numbertostring', array($this, 'numberToString')),
         );
     }
 
@@ -60,6 +62,11 @@ class GrammarExtension extends \Twig_Extension
         return strtolower($text);
     }
 
+    public function title($text)
+    {
+        return ucfirst($text);
+    }
+
     public function niceDate($text)
     {
         $time = strtotime($text);
@@ -70,5 +77,40 @@ class GrammarExtension extends \Twig_Extension
     public function getName()
     {
         return 'grammar_extension';
+    }
+
+    public function numberToString($number)
+    {
+        $number = (int) $number;
+        switch ($number) {
+            case 0:
+                return 'zero';
+            case 1:
+                return 'one';
+            case 2:
+                return 'two';
+            case 3:
+                return 'three';
+            case 4:
+                return 'four';
+            case 5:
+                return 'five';
+            case 6:
+                return 'six';
+            case 7:
+                return 'seven';
+            case 8:
+                return 'eight';
+            case 9:
+                return 'nine';
+            case 10:
+                return 'ten';
+            case 11:
+                return 'eleven';
+            case 12:
+                return 'twelve';
+            default:
+                return $number;
+        }
     }
 }

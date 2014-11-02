@@ -5,3 +5,43 @@
 		is
 	{%- endif -%}
 {% endmacro %}
+
+{% macro hasOrHad(person) %}
+	{%- if person['/people/deceased_person/date_of_death'] is known -%}
+		had
+	{%- else -%}
+		has
+	{%- endif -%}
+{% endmacro %}
+
+{% macro heOrShe(person) %}
+	{%- if person['gender'] is known -%}
+		{% if lower(person['gender']) == 'female' %}
+			she
+		{% else %}
+			he
+		{% endif %}
+	{%- else -%}
+		he
+	{%- endif -%}
+{% endmacro %}
+
+{% macro hisOrHer(person) %}
+	{%- if person['gender'] is known -%}
+		{% if lower(person['gender']) == 'female' %}
+			her
+		{% else %}
+			his
+		{% endif %}
+	{%- else -%}
+		his
+	{%- endif -%}
+{% endmacro %}
+
+{% macro isOrAre(count) %}
+	{%- if count == 1 -%}
+		is
+	{%- else -%}
+		are
+	{%- endif -%}
+{% endmacro %}

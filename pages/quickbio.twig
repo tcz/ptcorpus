@@ -5,27 +5,33 @@
 {% if person.date_of_birth is known %}
 (
 	{{- nicedate(person.date_of_birth) }}
-	{% if person.place_of_birth is known %}
-		{{ person.place_of_birth }}
-	{% endif %}
+	{%- if person.place_of_birth is known -%}
+		{{- person.place_of_birth -}}
+	{%- endif -%}
 	-
-	{% if person['/people/deceased_person/date_of_death'] is known %}
-		{{ nicedate(person['/people/deceased_person/date_of_death']) }}
-		{% if person['/people/deceased_person/place_of_death'] is known %}
-			{{ person['/people/deceased_person/place_of_death'] }}
-		{% endif %}
-	{% endif -%}
+	{%- if person['/people/deceased_person/date_of_death'] is known -%}
+		{{- nicedate(person['/people/deceased_person/date_of_death']) -}}
+		{%- if person['/people/deceased_person/place_of_death'] is known -%}
+			{{- person['/people/deceased_person/place_of_death'] -}}
+		{%- endif -%}
+	{%- endif -%}
 )
 {% endif %}
 
 {# Alias #}
 {% if person['/common/topic/alias'] is known %}
 	{% vary person.name %}
-	also known as {{ orconcat(person['/common/topic/alias']) }}
+
+		also known as {{ orconcat(person['/common/topic/alias']) }}
+
 	{% v 0.5 %}
-	a.k.a. {{ orconcat(person['/common/topic/alias']) }}
+
+		a.k.a. {{ orconcat(person['/common/topic/alias']) }}
+
 	{% v 0.2 %}
-	otherwise known as {{ orconcat(person['/common/topic/alias']) }}
+
+		otherwise known as {{ orconcat(person['/common/topic/alias']) }}
+
 	{% endvary %}
 {% endif %}
 
@@ -33,3 +39,32 @@
 {{ macros.isOrWas(person) }}
 {{ singular(person.nationality[0]['/location/location/adjectival_form'].0) }}
 {{ lower(andconcat(person.profession)) }}.
+
+
+{# Children #}
+{% if person['children'] is known %}
+	{% set childrencount = person['children']|length %}
+	{% if childrencount == 1 %}
+		{% set childnoun = 'child' %}
+	{% else %}
+		{% set childnoun = 'children' %}
+	{% endif %}
+
+	{% vary person.name %}
+		{# She had five children, Nick, Vick, Mick, Dick and Bobby #}
+
+		{{ macros.heOrShe(person) }} {{ macros.hasOrHad(person) }}
+		{{ numbertostring(childrencount) }}
+		{{ childnoun }},
+		{{ andconcat(person['children']) }}.
+
+	{% v 0.5 %}
+		{# His children is called/named Bob #}
+
+		{{ macros.hisOrHer(person) }} {{ childnoun }}
+		{{ macros.isOrAre(childrencount) }}
+		{{ vary(perosn.name, ['named', 'called', '']) }}
+		{{ andconcat(person['children']) }}.
+
+	{% endvary %}
+{% endif %}
