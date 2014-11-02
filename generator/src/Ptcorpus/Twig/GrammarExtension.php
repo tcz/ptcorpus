@@ -14,6 +14,7 @@ class GrammarExtension extends \Twig_Extension
             new \Twig_SimpleFunction('title', array($this, 'title')),
             new \Twig_SimpleFunction('nicedate', array($this, 'niceDate')),
             new \Twig_SimpleFunction('numbertostring', array($this, 'numberToString')),
+            new \Twig_SimpleFunction('pluralize', array($this, 'pluralize')),
         );
     }
 
@@ -112,5 +113,64 @@ class GrammarExtension extends \Twig_Extension
             default:
                 return $number;
         }
+    }
+
+    public static function pluralize($word)
+    {
+        $plurals = array(
+            '/(quiz)$/i'                => '\1zes',
+            '/^(ox)$/i'                 => '\1en',
+            '/([m|l])ouse$/i'           => '\1ice',
+            '/(matr|vert|ind)ix|ex$/i'  => '\1ices',
+            '/(x|ch|ss|sh)$/i'          => '\1es',
+            '/([^aeiouy]|qu)ies$/i'     => '\1y',
+            '/([^aeiouy]|qu)y$/i'       => '\1ies',
+            '/(hive)$/i'                => '\1s',
+            '/(?:([^f])fe|([lr])f)$/i'  => '\1\2ves',
+            '/sis$/i'                   => 'ses',
+            '/([ti])um$/i'              => '\1a',
+            '/(buffal|tomat)o$/i'       => '\1oes',
+            '/(bu)s$/i'                 => '\1ses',
+            '/(alias|status)/i'         => '\1es',
+            '/(octop|vir)us$/i'         => '\1i',
+            '/(ax|test)is$/i'           => '\1es',
+            '/s$/i'                     => 's',
+            '/$/'                       => 's'
+        );
+        $uncountables = array(
+            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep'
+        );
+        $irregulars = array(
+            'person'  => 'people',
+            'man'     => 'men',
+            'child'   => 'children',
+            'sex'     => 'sexes',
+            'move'    => 'moves'
+        );
+        $lowerCasedWord = strtolower($word);
+        foreach ($uncountables as $uncountable) {
+            if(substr($lowerCasedWord, (-1 * strlen($uncountable))) == $uncountable) {
+                return $word;
+            }
+        }
+        foreach ($irregulars as $plural => $singular) {
+            if (preg_match('/(' . $plural . ')$/i', $word, $arr)) {
+                return preg_replace(
+                    '/(' . $plural . ')$/i',
+                    substr($arr[0], 0, 1) . substr($singular, 1),
+                    $word
+                );
+            }
+        }
+        foreach ($plurals as $rule => $replacement) {
+            if (preg_match($rule, $word)) {
+                return preg_replace($rule, $replacement, $word);
+            }
+        }
+        if (preg_match('/s$/i', $word)) {
+            return $word . 'es';
+        }
+
+        return $word . 's';
     }
 }

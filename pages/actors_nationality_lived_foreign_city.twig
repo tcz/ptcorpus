@@ -1,0 +1,98 @@
+{% set genders = {'female': 'actress', 'male': 'actor'} %}
+
+{% set countries_over_1m = freebase('[{
+  "limit": 1,
+  "/location/statistical_region/population": [{
+    "number>": 1000000,
+    "limit": 1,
+    "number": null
+  }],
+  "name": null,
+  "type": "/location/country",
+  "/location/location/adjectival_form": []
+}]') %}
+
+{% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
+
+	{% set cities_over_1m = freebase('[{
+	  "limit": 10,
+	  "/location/statistical_region/population": [{
+	    "number>": 1000000,
+	    "limit": 1,
+	    "number": null
+	  }],
+	  "name": null,
+	  "/location/location/containedby": [],
+	  "type": "/location/citytown"
+	}]') %}
+
+	{% for city in cities_over_1m if country.name not in city['/location/location/containedby'] %}
+
+		{% for gender, profession_name in genders %}
+			{% set pluralized_profession_name = pluralize(profession_name) %}
+
+			{% set people = freebase('[{
+			  "ns0:profession": "Actor",
+			  "profession": [],
+			  "limit": 25,
+			  "*": null,
+			  "id": null,
+			  "gender": "' ~ gender ~ '",
+			  "type": "/people/person",
+			  "nationality": [{
+			    "name": "' ~ country.name ~ '",
+			    "/location/location/adjectival_form": []
+			  }],
+			  "/common/topic/alias": [],
+			  "/people/deceased_person/date_of_death": null,
+			  "/people/deceased_person/place_of_death": null,
+			  "n0:/people/person/places_lived": [{
+			    "*": null,
+			    "location": {
+			      "name": "' ~ city.name ~ '",
+			      "containedby": []
+			    }
+			  }],
+			  "/people/person/places_lived": [{
+			    "*": null,
+			    "location": {
+			      "name": null,
+			      "containedby": []
+			    }
+			  }]
+			}]') %}
+
+			{% if people|length >= 5 %}
+
+				{% page
+					title country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' in ' ~ city.name
+					keywords [profession_name, people.0.name, people.2.name, country.name, city.name]
+					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' who live in or lived in ' ~ city.name
+				%}
+
+					<h1>
+						{{ country['/location/location/adjectival_form'].0 }} {{ vary(country.name, {'movie stars': 1, pluralized_profession_name : 1}) }} in {{ city.name }}
+					</h1>
+
+					<p>Here are {{ people|length }} famous {{ pluralized_profession_name }} from {{ country.name }} who live or lived in {{ city.name }}:</p>
+
+					{% for person in people %}
+						<h2>{{ person.name }}</h2>
+						<p>{% include 'quickbio.twig' with {'person': person} %}</p>
+					{% endfor %}
+
+					<h2>Related articles</h2>
+
+					<!--RELATED
+
+					RELATED-->
+
+				{% endpage %}
+
+			{% endif %}
+
+		{% endfor %}
+
+	{% endfor %}
+
+{% endfor %}

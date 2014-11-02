@@ -35,7 +35,9 @@ class PageNode extends \Twig_Node
             ->raw("));\n")
 			->write('echo json_encode($pageData), "---------------"')
             ->raw(";\n")
-            ->subcompile($this->getNode('body'));
+            ->subcompile($this->getNode('body'))
+			->write('echo "---------------"')
+            ->raw(";\n");
 	}
 
 	public static function generateUrl($title)

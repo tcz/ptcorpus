@@ -20,6 +20,9 @@ class Renderer
 		$pages = array();
 		while ($renderedPages) {
 			$metadata = array_shift($renderedPages);
+			$metadata = trim($metadata);
+			if (!$metadata) break;
+
 			$content = array_shift($renderedPages);
 
 			$metadata = (array) json_decode($metadata, true);
