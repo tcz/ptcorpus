@@ -1,0 +1,40 @@
+body {
+	font-family: sans-serif;
+	font-family: 'Open Sans', sans-serif;
+	color: #222;
+	margin-top: 5em;
+	margin-bottom: 10em;
+}
+
+strong {
+	font-weight: 600;
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: 'Oswald', sans-serif;
+	font-weight: normal;
+}
+
+#wrapper {
+	margin: 0 auto;
+	width: 1000px;
+	max-width: 100%;
+}
+
+header {
+	margin-bottom: 3em;
+}
+
+#logo {
+	font-family: 'Oswald', sans-serif;
+	text-transform: uppercase;
+	line-height: 50px;
+	font-size: 3em;
+	color: #888;
+	letter-spacing: -0.02em;
+}
+
+#logo img {
+	vertical-align: top;
+	margin-right: 0.1em;
+}
