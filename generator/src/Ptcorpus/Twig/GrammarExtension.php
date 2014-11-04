@@ -11,7 +11,7 @@ class GrammarExtension extends \Twig_Extension
             new \Twig_SimpleFunction('andconcat', array($this, 'andConcat')),
             new \Twig_SimpleFunction('singular', array($this, 'singular')),
             new \Twig_SimpleFunction('lower', array($this, 'lower')),
-            new \Twig_SimpleFunction('title', array($this, 'title')),
+            new \Twig_SimpleFunction('ucfirst', array($this, 'ucfirst')),
             new \Twig_SimpleFunction('nicedate', array($this, 'niceDate')),
             new \Twig_SimpleFunction('numbertostring', array($this, 'numberToString')),
             new \Twig_SimpleFunction('pluralize', array($this, 'pluralize')),
@@ -63,7 +63,7 @@ class GrammarExtension extends \Twig_Extension
         return strtolower($text);
     }
 
-    public function title($text)
+    public function ucfirst($text)
     {
         return ucfirst($text);
     }

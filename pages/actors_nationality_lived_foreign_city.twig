@@ -1,7 +1,9 @@
+{% spaceless %}
+{% import "macros.twig" as macros %}
+
 {% set genders = {'female': 'actress', 'male': 'actor'} %}
 
 {% set countries_over_1m = freebase('[{
-  "limit": 1,
   "/location/statistical_region/population": [{
     "number>": 1000000,
     "limit": 1,
@@ -15,7 +17,6 @@
 {% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
 
 	{% set cities_over_1m = freebase('[{
-	  "limit": 10,
 	  "/location/statistical_region/population": [{
 	    "number>": 1000000,
 	    "limit": 1,
@@ -78,7 +79,33 @@
 
 					{% for person in people %}
 						<h2>{{ person.name }}</h2>
-						<p>{% include 'quickbio.twig' with {'person': person} %}</p>
+						<p>
+							{% include 'quickbio.twig' with {'person': person} %}
+
+							{% set place_names = [] %}
+							{% for place_lived in person['/people/person/places_lived'] %}
+								{% set place_names = place_names|merge([place_lived.location.name]) %}
+							{% endfor %}
+
+							{% if person['/people/deceased_person/date_of_death'] is known %}
+								{{ ucfirst(macros.heOrShe(person)) }}
+
+								{% vary person.name %}
+									was
+									{{ vary(person.name, ['living', 'living', 'residing']) }} in
+									{{ andconcat(place_names) }}.
+								{% v 0.5 %}
+									owned {{ vary(person.name, ['a home', 'an apartment']) }} in
+									{{ andconcat(place_names) }}.
+								{% endvary %}
+							{% else %}
+								{{ ucfirst(macros.heOrShe(person)) }} has been {{ vary(person.name, ['', '', 'known to be', 'widely known to be',
+								'generally known to be', 'publicly known to be']) }}
+								{{ vary(person.name, ['living', 'living', 'residing']) }} in
+								{{ andconcat(place_names) }}.
+							{% endif %}
+
+						</p>
 					{% endfor %}
 
 					<h2>Related articles</h2>
@@ -96,3 +123,4 @@
 	{% endfor %}
 
 {% endfor %}
+{% endspaceless %}

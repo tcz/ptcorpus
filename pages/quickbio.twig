@@ -53,7 +53,7 @@
 	{% vary person.name %}
 		{# She had five children, Nick, Vick, Mick, Dick and Bobby #}
 
-		{{ title(macros.heOrShe(person)) }} {{ macros.hasOrHad(person) }}
+		{{ ucfirst(macros.heOrShe(person)) }} {{ macros.hasOrHad(person) }}
 		{{ numbertostring(childrencount) }}
 		{{ childnoun }},
 		{{ andconcat(person['children']) }}.
@@ -61,7 +61,7 @@
 	{% v 0.5 %}
 		{# His children is called/named Bob #}
 
-		{{ title(macros.hisOrHer(person)) }} {{ childnoun }}
+		{{ ucfirst(macros.hisOrHer(person)) }} {{ childnoun }}
 		{{ macros.isOrAre(childrencount) }}
 		{{ vary(perosn.name, ['named', 'called', '']) }}
 		{{ andconcat(person['children']) }}.

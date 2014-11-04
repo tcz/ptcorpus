@@ -16,11 +16,11 @@
 
 {% macro heOrShe(person) %}
 	{%- if person['gender'] is known -%}
-		{% if lower(person['gender']) == 'female' %}
+		{%- if lower(person['gender']) == 'female' -%}
 			she
-		{% else %}
+		{%- else -%}
 			he
-		{% endif %}
+		{%- endif -%}
 	{%- else -%}
 		he
 	{%- endif -%}
@@ -28,11 +28,11 @@
 
 {% macro hisOrHer(person) %}
 	{%- if person['gender'] is known -%}
-		{% if lower(person['gender']) == 'female' %}
+		{%- if lower(person['gender']) == 'female' -%}
 			her
-		{% else %}
+		{%- else -%}
 			his
-		{% endif %}
+		{%- endif -%}
 	{%- else -%}
 		his
 	{%- endif -%}

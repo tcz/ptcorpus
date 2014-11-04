@@ -16,6 +16,7 @@ class Freebase {
 				"&key=" . self::API_KEY;
 
 			$response = file_get_contents($url);
+
 		}
 
 		$data = json_decode($response, true);
