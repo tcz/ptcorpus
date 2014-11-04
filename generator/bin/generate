@@ -6,7 +6,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Ptcorpus\RelatedArticles;
 
 $container 		= new ContainerBuilder();
 $container->setParameter('base_path', __DIR__.'/../');
@@ -38,30 +37,4 @@ layout: post
 {$page['content']}
 CONTENT
 	);
-}
-
-$directory = new RecursiveDirectoryIterator($destination);
-$iterator = new RecursiveIteratorIterator($directory);
-$htmlFiles = new RegexIterator($iterator, '/^.+\.html$/i');
-$relatedArticles = new RelatedArticles;
-
-foreach ($htmlFiles as $htmlFile)
-{
-	$path = realpath($htmlFile->getPathName());
-	$relatedArticles->addPage($path);
-}
-
-foreach ($htmlFiles as $htmlFile)
-{
-	$path = realpath($htmlFile->getPathName());
-	$relatedArticlesHtml = $relatedArticles->getRelatedArticles($path, 3);
-	$content = file_get_contents($path);
-
-	$content = preg_replace(
-		'/(\<\!\-\-RELATED).*?(RELATED\-\-\>)/s',
-		'$1 -->' . $relatedArticlesHtml . '<!-- $2',
-		$content
-	);
-
-	file_put_contents($path, $content);
 }

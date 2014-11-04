@@ -5,10 +5,21 @@ namespace Ptcorpus;
 class RelatedArticles
 {
 	private $pagesWithKeywords = array();
+	private $pageParser;
+
+	public function __construct(PageParser $pageParser)
+	{
+		$this->pageParser = $pageParser;
+	}
+
+	public function clear()
+	{
+		$this->pagesWithKeywords = array();
+	}
 
 	public function addPage($path)
 	{
-		$this->pagesWithKeywords[$path] = $this->getKeywords($path);
+		$this->pagesWithKeywords[$path] = $this->pageParser->getKeywords($path);
 	}
 
 	public function getRelatedArticles($mainPath, $numberOfArticles)
@@ -31,17 +42,16 @@ class RelatedArticles
 		$associatedPaths = $hasher->getAssociated($mainPath, $numberOfArticles);
 
 		foreach ($associatedPaths as $associatedPath) {
-			$headerValues = $this->getHeaderValues($associatedPath);
 			$html .= "<li>";
-			$html .= "<a href='/" .
-				htmlspecialchars($this->getUrl($associatedPath)) .
+			$html .= "<a href='" .
+				htmlspecialchars($this->pageParser->getUrl($associatedPath)) .
 				"' title='".
-				htmlspecialchars($headerValues['title']) .
+				htmlspecialchars($this->pageParser->getTitle($associatedPath)) .
 				"'>";
 			$html .= "<strong>";
-			$html .= htmlspecialchars($headerValues['title']);
+			$html .= htmlspecialchars($this->pageParser->getTitle($associatedPath));
 			$html .= "</strong> ";
-			$html .= htmlspecialchars($headerValues['description']);
+			$html .= htmlspecialchars($this->pageParser->getDescription($associatedPath));
 			$html .= "</a>";
 			$html .= "</li>";
 		}
@@ -51,42 +61,5 @@ class RelatedArticles
 		return $html;
 	}
 
-	private function getKeywords($path)
-	{
-		$headerValues = $this->getHeaderValues($path);
-		if (!isset($headerValues['keywords'])) {
-			return array();
-		}
 
-		return preg_split('/\s*,\s*/', $headerValues['keywords']);
-	}
-
-	private function getHeaderValues($path)
-	{
-		$content = file_get_contents($path);
-		if (!preg_match('/^---\n(.*?)\n---/s', $content, $matches))
-		{
-			return array();
-		}
-
-		$header = $matches[1];
-		$lines = explode("\n", $header);
-		$headerValues = array();
-
-		foreach ($lines as $line) {
-			$parts = preg_split("/\s*:\s*/", $line, 2);
-			if (2 !== count($parts)) {
-				continue;
-			}
-			$headerValues[$parts[0]] = $parts[1];
-		}
-
-		return $headerValues;
-	}
-
-	private function getUrl($path)
-	{
-		$basename = basename($path);
-		return str_replace('1970-01-01-', '', $basename);
-	}
 }

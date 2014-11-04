@@ -44,3 +44,16 @@ services:
 
     ptcorpus.twig.extension.vary:
         class: Ptcorpus\Twig\VaryExtension
+
+    ptcorpus.page_parser:
+        class: Ptcorpus\PageParser
+
+    ptcorpus.related_articles:
+        class: Ptcorpus\RelatedArticles
+        arguments:
+            - @ptcorpus.page_parser
+
+    ptcorpus.staff_picks:
+        class: Ptcorpus\StaffPicks
+        arguments:
+            - @ptcorpus.page_parser
