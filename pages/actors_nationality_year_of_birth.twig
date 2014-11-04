@@ -1,0 +1,98 @@
+{% spaceless %}
+{% import "macros.twig" as macros %}
+
+{% set genders = {'female': 'actress', 'male': 'actor'} %}
+
+{% set countries_over_1m = freebase('[{
+  "/location/statistical_region/population": [{
+    "number>": 1000000,
+    "limit": 1,
+    "number": null
+  }],
+  "name": null,
+  "type": "/location/country",
+  "/location/location/adjectival_form": []
+}]') %}
+
+{% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
+
+	{% set years = range(1900, 2000) %}
+
+	{% for year in years %}
+
+		{% for gender, profession_name in genders %}
+			{% set pluralized_profession_name = pluralize(profession_name) %}
+
+			{% set people = freebase('[{
+			  "ns0:profession": "Actor",
+			  "profession": [],
+			  "limit": 50,
+			  "*": null,
+			  "id": null,
+			  "gender": "' ~ gender ~ '",
+			  "type": "/people/person",
+			  "nationality": [{
+			    "name": "' ~ country.name ~ '",
+			    "/location/location/adjectival_form": []
+			  }],
+			  "/common/topic/alias": [],
+			  "/people/deceased_person/date_of_death": null,
+			  "/people/deceased_person/place_of_death": null,
+			  "n0:date_of_birth>=": "' ~ year ~ '-01-01",
+  			  "n0:date_of_birth<": "' ~ year ~ '-12-31"
+			}]') %}
+
+			{% if people|length >= 5 %}
+
+				{% page
+					title country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' born in ' ~ year
+					keywords [profession_name, people.0.name, people.2.name, country.name, year, 'born']
+					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' who were born in ' ~ year
+				%}
+
+					<h1>
+						{% vary country.name %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							movie stars born in
+							{{ year }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							{{ pluralized_profession_name }} born in
+							{{ year }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							{{ pluralized_profession_name }} who were born in
+							{{ year }}
+						{% v 0.5 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							movie {{ pluralized_profession_name }} born in the year
+							{{ year }}
+						{% endvary %}
+					</h1>
+
+					<p>Here are {{ people|length }} famous {{ pluralized_profession_name }} from {{ country.name }} were born in {{ year }}:</p>
+
+					{% for person in people %}
+						<h2>{{ person.name }}</h2>
+						<p>
+							{% include 'quickbio.twig' with {'person': person} %}
+
+						</p>
+					{% endfor %}
+
+					<h2>Related articles</h2>
+
+					<!--RELATED
+
+					RELATED-->
+
+				{% endpage %}
+
+			{% endif %}
+
+		{% endfor %}
+
+	{% endfor %}
+
+{% endfor %}
+{% endspaceless %}

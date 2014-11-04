@@ -22,7 +22,7 @@ class Freebase {
 		$data = json_decode($response, true);
 
 		if (null === $data) {
-			throw new \Exception("Invalid response: $response");
+			throw new \Exception("Invalid response: $response, queried $query");
 		}
 
 		if (array_key_exists("errors", $data) || !array_key_exists("result", $data)) {
