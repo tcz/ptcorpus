@@ -1,7 +1,7 @@
 <html>
     <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# medium-com: http://ogp.me/ns/fb/medium-com#">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" user-scalable="no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimum-scale=1.0">
         <title>{{ page.title }}</title>
         <link rel="canonical" href="http://patheticfacts.com/">
         <meta name="title" content="{{ page.title }}">
@@ -24,11 +24,21 @@
         <link href='http://fonts.googleapis.com/css?family=Oswald|Open+Sans:400,600' rel='stylesheet' type='text/css'>
     </head>
     <body>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-56575401-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
         <div id='wrapper'>
             <header>
                 <div id="logo">
                     <img src="/img/patheticfacts.png" alt="Pathetic Facts logo" />
-                    Pathetic Facts
+                    <a href="/">Pathetic Facts</a>
                 </div>
             </header>
             {{content}}
