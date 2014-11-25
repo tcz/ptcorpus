@@ -51,9 +51,9 @@ class StaffPicks
 				"' title='".
 				htmlspecialchars($this->pageParser->getTitle($pickedPath)) .
 				"'>";
-			$html .= "<h1>";
+			$html .= "<h2>";
 			$html .= htmlspecialchars($this->pageParser->getTitle($pickedPath));
-			$html .= "</h1>";
+			$html .= "</h2>";
 			$html .= htmlspecialchars($this->pageParser->getDescription($pickedPath));
 			$html .= "</a>";
 			$html .= "</li>";

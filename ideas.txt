@@ -1,0 +1,26 @@
+DONE [nationality/famous] actors died in [year]
+[nationality/famous] actors died young
+[nationality/famous] actors died before turning [age]
+[nationality/famous] actors born on [day] [month]
+[nationality/famous] actors died in [cause (cancer, drug overdose, traffic)]
+
+Everything else with musicians
+
+[{
+  "ns0:profession": "Actor",
+  "profession": [],
+  "limit": 25,
+  "*": null,
+  "id": null,
+  "gender": "female",
+  "type": "/people/person",
+  "nationality": [{
+    "name": "United States of America",
+    "/location/location/adjectival_form": []
+  }],
+  "/common/topic/alias": [],
+  "/people/deceased_person/date_of_death": null,
+  "/people/deceased_person/place_of_death": null,
+  "/people/deceased_person/cause_of_death": [],
+  "n0:/people/deceased_person/cause_of_death": []
+}]

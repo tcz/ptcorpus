@@ -22,6 +22,11 @@ services:
 
     ptcorpus.freebase:
         class: Ptcorpus\Freebase
+        arguments:
+            - @guzzle.http.client
+
+    guzzle.http.client:
+        class: GuzzleHttp\Client
 
     ptcorpus.renderer:
         class: Ptcorpus\Renderer

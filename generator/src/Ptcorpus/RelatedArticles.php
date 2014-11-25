@@ -40,6 +40,7 @@ class RelatedArticles
 		$html = "<ul class='related'>";
 
 		$associatedPaths = $hasher->getAssociated($mainPath, $numberOfArticles);
+		$counter = 0;
 
 		foreach ($associatedPaths as $associatedPath) {
 			$html .= "<li>";
@@ -54,6 +55,12 @@ class RelatedArticles
 			$html .= htmlspecialchars($this->pageParser->getDescription($associatedPath));
 			$html .= "</a>";
 			$html .= "</li>";
+
+			$counter++;
+
+			if ($counter % 3 === 0) {
+				$html .= "</ul><ul class='related'>";
+			}
 		}
 
 		$html .= "</ul>";

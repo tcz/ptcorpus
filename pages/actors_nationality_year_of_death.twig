@@ -21,7 +21,7 @@
 
 {% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
 
-	{% set years = range(1900, 2000) %}
+	{% set years = range(1950, 2014) %}
 
 	{% for year in years %}
 
@@ -43,39 +43,42 @@
 			  "/common/topic/alias": [],
 			  "/people/deceased_person/date_of_death": null,
 			  "/people/deceased_person/place_of_death": null,
-			  "n0:date_of_birth>=": "' ~ year ~ '-01-01",
-  			  "n0:date_of_birth<=": "' ~ year ~ '-12-31"
+			  "n0:/people/deceased_person/date_of_death": {
+			    "type": "/type/datetime",
+			    "value<": "' ~ (year+1) ~ '",
+			    "value>=": "' ~ year ~ '"
+			  }
 			}]') %}
 
-			{% if people|length >= 5 %}
+			{% if people|length >= 1 %}
 
 				{% page
-					title country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' born in ' ~ year
-					keywords [profession_name, people.0.name, people.2.name, country.name, year, 'born']
-					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' who were born in ' ~ year
+					title country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' died in ' ~ year
+					keywords [profession_name, people.0.name, people.2.name, country.name, year, 'died']
+					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' who died in ' ~ year
 				%}
 
 					<h1>
 						{% vary country.name %}
 							{{ country['/location/location/adjectival_form'].0 }}
-							movie stars born in
+							movie stars died in
 							{{ year }}
 						{% v 1 %}
 							{{ country['/location/location/adjectival_form'].0 }}
-							{{ pluralized_profession_name }} born in
+							{{ pluralized_profession_name }} died in
 							{{ year }}
 						{% v 1 %}
 							{{ country['/location/location/adjectival_form'].0 }}
-							{{ pluralized_profession_name }} who were born in
+							{{ pluralized_profession_name }} who deceased in
 							{{ year }}
 						{% v 0.5 %}
 							{{ country['/location/location/adjectival_form'].0 }}
-							movie {{ pluralized_profession_name }} born in the year
+							movie {{ pluralized_profession_name }} died in the year
 							{{ year }}
 						{% endvary %}
 					</h1>
 
-					<p>Here are {{ people|length }} famous {{ pluralized_profession_name }} from {{ country.name }} were born in {{ year }}:</p>
+					<p>Here are {{ people|length }} famous {{ pluralized_profession_name }} from {{ country.name }} died in {{ year }}:</p>
 
 					{% for person in people %}
 						<h2>{{ person.name }}</h2>

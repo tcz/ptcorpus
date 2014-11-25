@@ -27,11 +27,17 @@ $iterator = new RecursiveIteratorIterator($directory);
 $htmlFiles = new RegexIterator($iterator, '/^.+\.html$/i');
 
 $staffPicks->clear();
+$htmlFiles = iterator_to_array($htmlFiles);
 
+$count = 1;
 foreach ($htmlFiles as $htmlFile)
 {
+	echo "Indexing ", $count, "/", count($htmlFiles), "\n";
+
 	$path = realpath($htmlFile->getPathName());
 	$staffPicks->addPage($path);
+
+	$count++;
 }
 
 $picks = $staffPicks->getPicks();

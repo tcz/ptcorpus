@@ -26,17 +26,27 @@ $iterator = new RecursiveIteratorIterator($directory);
 $htmlFiles = new RegexIterator($iterator, '/^.+\.html$/i');
 
 $relatedArticles->clear();
+$htmlFiles = iterator_to_array($htmlFiles);
 
+$count = 1;
 foreach ($htmlFiles as $htmlFile)
 {
+	echo "Indexing ", $count, "/", count($htmlFiles), "\n";
+
 	$path = realpath($htmlFile->getPathName());
 	$relatedArticles->addPage($path);
+
+	$count++;
 }
+
+$count = 1;
 
 foreach ($htmlFiles as $htmlFile)
 {
+	echo "Generating ", $count, "/", count($htmlFiles), "\n";
+
 	$path = realpath($htmlFile->getPathName());
-	$relatedArticlesHtml = $relatedArticles->getRelatedArticles($path, 3);
+	$relatedArticlesHtml = $relatedArticles->getRelatedArticles($path, 6);
 	$content = file_get_contents($path);
 
 	$content = preg_replace(
@@ -46,4 +56,6 @@ foreach ($htmlFiles as $htmlFile)
 	);
 
 	file_put_contents($path, $content);
+
+	$count++;
 }
