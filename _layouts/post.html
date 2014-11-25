@@ -14,14 +14,12 @@
         <meta name="twitter:site" content="@PatheticFacts">
         <link rel="publisher" href="https://plus.google.com/xxxx">
         <meta name="twitter:card" content="summary">
-        <link rel="stylesheet" href="/css/main.css">
         <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-precomposed-152.png">
         <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/apple-touch-icon-precomposed-120.png">
         <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/apple-touch-icon-precomposed-76.png">
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
         <meta property="og:description" content="{{ page.title }}">
         <meta property="og:type" content="website">
-        <link href='http://fonts.googleapis.com/css?family=Oswald|Open+Sans:400,600' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <script>
@@ -42,6 +40,37 @@
                 </div>
             </header>
             {{content}}
+
+            <div id='footer'>Source of information on this website: <a href="https://www.freebase.com/" title="Freebase">Freebase</a> (license: <a href="http://creativecommons.org/licenses/by/2.5/" title="Creative Commons Attribution Only (CC-BY)">Creative Commons Attribution Only (CC-BY)</a>)</div>
         </div>
+
+        <script type="text/javascript">
+          WebFontConfig = {
+            google: { families: [ 'Oswald::latin', 'Open+Sans::latin' ] }
+          };
+          (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+              '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+          })(); </script>
+
+        <script>
+            var cb = function() {
+                var l = document.createElement('link'); l.rel = 'stylesheet';
+                l.href = '/css/main.css';
+                var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+            };
+            var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+              webkitRequestAnimationFrame || msRequestAnimationFrame;
+
+            if (raf) raf(cb);
+            else window.addEventListener('load', cb);
+        </script>
+
+        <link href='http://fonts.googleapis.com/css?family=Oswald|Open+Sans:400,600' rel='stylesheet' type='text/css'>
     </body>
 </html>

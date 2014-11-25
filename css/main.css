@@ -53,7 +53,7 @@ ul.related {
     list-style-type: none;
     padding: 0;
     display: table;  table-layout: fixed;  width: 100%;
-    margin: 0em -1em;
+    margin: 0em -1em 1em -1em;
 }
 
 ul.related li {
@@ -124,4 +124,10 @@ ul.picks li + li {
 	body {
 		margin-top: 1em;
 	}
+}
+
+#footer {
+	font-size: 0.7em;
+	text-align: center;
+	margin-top: 5em;
 }
