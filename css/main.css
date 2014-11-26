@@ -11,7 +11,7 @@ strong {
 }
 
 a {
-	color: #222;
+	color: #2C89A0;
 	text-decoration: none;
 }
 
@@ -130,4 +130,8 @@ ul.picks li + li {
 	font-size: 0.7em;
 	text-align: center;
 	margin-top: 5em;
+}
+
+.picks a {
+	color: #222;
 }
