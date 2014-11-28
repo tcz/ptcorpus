@@ -37,4 +37,6 @@ layout: post
 {$page['content']}
 CONTENT
 	);
+
+	echo "Writing to ", $path, "\n";
 }

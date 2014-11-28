@@ -5,8 +5,8 @@ namespace Ptcorpus;
 use GuzzleHttp\Client as HttpClient;
 
 class Freebase {
-	const API_KEY = 'AIzaSyBpe_wWFnUMBI5MtMyr6JvnEP4N6OQF4hg';
-	// const API_KEY = 'AIzaSyBOZpApMj6jcYUekBYsEw9T1iJGIpLkrm0';
+	//const API_KEY = 'AIzaSyBpe_wWFnUMBI5MtMyr6JvnEP4N6OQF4hg';
+	const API_KEY = 'AIzaSyBOZpApMj6jcYUekBYsEw9T1iJGIpLkrm0';
 	const BASE_URL = 'https://www.googleapis.com/freebase/v1/mqlread?lang=%2Flang%2Fen';
 	const CACHE_DIR = '/tmp/fbcache/';
 

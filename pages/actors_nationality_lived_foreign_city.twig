@@ -60,6 +60,11 @@
 			      "name": null,
 			      "containedby": []
 			    }
+			  }],
+			  "wiki:key": [{
+			    "namespace": "/wikipedia/en_id",
+			    "value": null,
+			    "limit": 1
 			  }]
 			}]') %}
 
@@ -125,6 +130,9 @@
 								{{ andconcat(place_names) }}.
 							{% endif %}
 
+						</p>
+						<p>
+							{% include 'wikimore.twig' with {'person': person} %}
 						</p>
 					{% endfor %}
 

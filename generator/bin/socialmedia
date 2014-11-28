@@ -1,0 +1,49 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+$container 		= new ContainerBuilder();
+$container->setParameter('base_path', __DIR__.'/../');
+$loader 		= new YamlFileLoader($container, new FileLocator(array(__DIR__ . '/../src')));
+
+$loader->load('services.yml');
+
+$pagesPath = $argv[1];
+
+if (!is_dir($pagesPath)) {
+	throw new Exception("$pagesPath must be a directory");
+}
+
+$parser = $container->get('ptcorpus.page_parser');
+
+$directory = new RecursiveDirectoryIterator($pagesPath);
+$iterator = new RecursiveIteratorIterator($directory);
+$htmlFiles = new RegexIterator($iterator, '/^.+\.html$/i');
+
+$paths = array();
+foreach ($htmlFiles as $htmlFile)
+{
+	$path = $htmlFile->getPathName();
+	$paths[] = $path;
+}
+
+shuffle($paths);
+$paths = array_slice($paths, 0, 110);
+
+$i = 0;
+foreach ($paths as $path)
+{
+	fputcsv (STDOUT, array(
+			date('m/d/Y H:i', round(time()/300)*300 + 3600*8 + $i * 28800),
+			substr($parser->getTitle($path), 0, 115),
+			'http://patheticfacts.com' . $parser->getUrl($path),
+		)
+	);
+
+	$i++;
+}

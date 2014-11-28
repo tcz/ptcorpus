@@ -47,7 +47,12 @@
 			    "type": "/type/datetime",
 			    "value<": "' ~ (year+1) ~ '",
 			    "value>=": "' ~ year ~ '"
-			  }
+			  },
+			  "wiki:key": [{
+			    "namespace": "/wikipedia/en_id",
+			    "value": null,
+			    "limit": 1
+			  }]
 			}]') %}
 
 			{% if people|length >= 1 %}
@@ -84,7 +89,9 @@
 						<h2>{{ person.name }}</h2>
 						<p>
 							{% include 'quickbio.twig' with {'person': person} %}
-
+						</p>
+						<p>
+							{% include 'wikimore.twig' with {'person': person} %}
 						</p>
 					{% endfor %}
 

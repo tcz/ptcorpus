@@ -2,7 +2,7 @@ DONE [nationality/famous] actors died in [year]
 [nationality/famous] actors died young
 [nationality/famous] actors died before turning [age]
 [nationality/famous] actors born on [day] [month]
-[nationality/famous] actors died in [cause (cancer, drug overdose, traffic)]
+DONE [nationality/famous] actors died in [cause (cancer, drug overdose, traffic)]
 
 Everything else with musicians
 

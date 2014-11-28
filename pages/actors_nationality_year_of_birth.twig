@@ -44,7 +44,12 @@
 			  "/people/deceased_person/date_of_death": null,
 			  "/people/deceased_person/place_of_death": null,
 			  "n0:date_of_birth>=": "' ~ year ~ '-01-01",
-  			  "n0:date_of_birth<=": "' ~ year ~ '-12-31"
+  			  "n0:date_of_birth<=": "' ~ year ~ '-12-31",
+			  "wiki:key": [{
+			    "namespace": "/wikipedia/en_id",
+			    "value": null,
+			    "limit": 1
+			  }]
 			}]') %}
 
 			{% if people|length >= 5 %}
@@ -81,7 +86,9 @@
 						<h2>{{ person.name }}</h2>
 						<p>
 							{% include 'quickbio.twig' with {'person': person} %}
-
+						</p>
+						<p>
+							{% include 'wikimore.twig' with {'person': person} %}
 						</p>
 					{% endfor %}
 

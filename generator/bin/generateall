@@ -1,0 +1,21 @@
+set -v
+
+EXPORTDIR=$1
+SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+for TEMPLATE in $SCRIPTDIR/../../pages/actors*; do
+	BASETEMPLATE=`basename $TEMPLATE`
+	echo "Generating for $BASETEMPLATE"
+
+	while [ true ]
+	do
+	   $SCRIPTDIR/generate $BASETEMPLATE $EXPORTDIR
+
+	   RETURN=$?
+
+	   if [ $RETURN -eq 0 ]
+	   then
+	      break
+	   fi
+	done
+done

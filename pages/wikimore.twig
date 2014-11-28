@@ -1,0 +1,3 @@
+{% if person['wiki:key'][0].value is known %}
+Read more about <a href="http://en.wikipedia.org/wiki/index.html?curid={{ person['wiki:key'][0].value }}" title="Wikipedia article about {{ person.name }}">{{ person.name }} on Wikipedia &raquo;</a>
+{% endif %}
