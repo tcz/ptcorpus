@@ -15,6 +15,7 @@ class GrammarExtension extends \Twig_Extension
             new \Twig_SimpleFunction('nicedate', array($this, 'niceDate')),
             new \Twig_SimpleFunction('numbertostring', array($this, 'numberToString')),
             new \Twig_SimpleFunction('pluralize', array($this, 'pluralize')),
+            new \Twig_SimpleFunction('year', array($this, 'year')),
         );
     }
 
@@ -73,6 +74,13 @@ class GrammarExtension extends \Twig_Extension
         $time = strtotime($text);
 
         return date('F j, Y', $time);
+    }
+
+    public function year($text)
+    {
+        $time = strtotime($text);
+
+        return date('Y', $time);
     }
 
     public function getName()

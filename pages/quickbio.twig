@@ -2,11 +2,11 @@
 
 <strong>{{ person.name }}</strong>
 {# Date of birth and date of death #}
-{% if person.date_of_birth is known %}
+{% if person['/people/person/date_of_birth'] is known %}
 (
-	{{- nicedate(person.date_of_birth) }}
-	{%- if person.place_of_birth is known %}
-		{{ person.place_of_birth -}}
+	{{- nicedate(person['/people/person/date_of_birth']) }}
+	{%- if person['/people/person/place_of_birth'] is known %}
+		{{ person['/people/person/place_of_birth'] -}}
 	{%- endif -%}
 	-
 	{%- if person['/people/deceased_person/date_of_death'] is known -%}
@@ -37,13 +37,13 @@
 
 {# Nationality and profession #}
 {{ macros.isOrWas(person) }}
-{{ singular(person.nationality[0]['/location/location/adjectival_form'].0) }}
-{{ lower(andconcat(person.profession)) }}.
+{{ singular(person['/people/person/nationality'][0]['/location/location/adjectival_form'].0) }}
+{{ lower(andconcat(person['/people/person/profession'])) }}.
 
 
 {# Children #}
-{% if person['children'] is known %}
-	{% set childrencount = person['children']|length %}
+{% if person['/people/person/children'] is known %}
+	{% set childrencount = person['/people/person/children']|length %}
 	{% if childrencount == 1 %}
 		{% set childnoun = 'child' %}
 	{% else %}
@@ -56,15 +56,15 @@
 		{{ ucfirst(macros.heOrShe(person)) }} {{ macros.hasOrHad(person) }}
 		{{ numbertostring(childrencount) }}
 		{{ childnoun }},
-		{{ andconcat(person['children']) }}.
+		{{ andconcat(person['/people/person/children']) }}.
 
 	{% v 0.5 %}
 		{# His children is called/named Bob #}
 
 		{{ ucfirst(macros.hisOrHer(person)) }} {{ childnoun }}
 		{{ macros.isOrAre(childrencount) }}
-		{{ vary(perosn.name, ['named', 'called', '']) }}
-		{{ andconcat(person['children']) }}.
+		{{ vary(person.name, ['named', 'called', '']) }}
+		{{ andconcat(person['/people/person/children']) }}.
 
 	{% endvary %}
 {% endif %}

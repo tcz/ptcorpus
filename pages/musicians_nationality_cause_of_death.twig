@@ -1,0 +1,156 @@
+{% spaceless %}
+{% import "macros.twig" as macros %}
+
+{% set countries_over_1m = freebase('[{
+  "/location/statistical_region/population": [{
+    "number>": 1000000,
+    "limit": 1,
+    "number": null
+  }],
+  "name": null,
+  "type": "/location/country",
+  "/location/location/adjectival_form": []
+}]') %}
+
+{% set countries_over_1m = countries_over_1m|merge([{
+	'name': 'the world',
+	'/location/location/adjectival_form': ['Famous']
+}]) %}
+
+{% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
+
+	{% set causes_of_death = freebase('[{
+	  "limit": 1000,
+	  "name": null,
+	  "type": "/people/cause_of_death"
+	}]') %}
+
+	{% for cause_of_death in causes_of_death %}
+		{% set cause_of_death = cause_of_death.name %}
+
+		{% set pluralized_profession_name = pluralize(profession_name) %}
+
+		{% set people = freebase('[{
+		  "/people/person/profession": [],
+		  "/music/artist/genre": [],
+		  "/music/artist/album": [],
+		  "limit": 50,
+		  "*": null,
+		  "id": null,
+		  "type": "/music/artist",
+		  "/people/person/nationality": [{
+		    "name": ' ~ (country.name == 'the world' ? 'null' : '"' ~ country.name ~ '"' ) ~ ',
+		    "/location/location/adjectival_form": []
+		  }],
+		  "/people/person/children": [],
+		  "/common/topic/alias": [],
+		  "/people/deceased_person/date_of_death": null,
+		  "/people/deceased_person/place_of_death": null,
+		  "/people/person/place_of_birth": null,
+		  "/people/person/date_of_birth": null,
+		  "/people/person/gender": null,
+		  "n0:/people/deceased_person/cause_of_death": [{
+		    "name": "' ~ cause_of_death ~ '"
+		  }],
+		  "wiki:key": [{
+		    "namespace": "/wikipedia/en_id",
+		    "value": null,
+		    "limit": 1
+		  }]
+		}]') %}
+
+		{% if people|length >= 1 %}
+
+			{% page
+				title country['/location/location/adjectival_form'].0 ~ ' musicians died in ' ~ cause_of_death
+				keywords ['musician', 'music star', people.0.name, people.2.name, country.name, cause_of_death, 'died']
+				description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' music stars who died in ' ~ cause_of_death
+			%}
+
+				<h1>
+					{% vary country.name %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						musicians died in
+						{{ cause_of_death }}
+					{% v 1 %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						music stars died in
+						{{ cause_of_death }}
+					{% v 1 %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						music stars died as a result of
+						{{ cause_of_death }}
+					{% v 1 %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						musicians died because of
+						{{ cause_of_death }}
+					{% v 1 %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						musicians who died due to
+						{{ cause_of_death }}
+					{% v 0.5 %}
+						{{ country['/location/location/adjectival_form'].0 }}
+						music stars deceased in
+						{{ cause_of_death }}
+					{% endvary %}
+				</h1>
+
+				<p>Here are {{ people|length }} famous musicians from {{ country.name }} died in {{ cause_of_death }}:</p>
+
+				{% for person in people %}
+					<h2>{{ person.name }}</h2>
+					<p>
+						{% include 'quickbio.twig' with {'person': person} %}
+					</p>
+					<p>
+						{% if person['/music/artist/album'] is known %}
+							{% vary person.name %}
+								{{ ucfirst(macros.hisOrHer(person)) }} albums include
+							{% v 1 %}
+								{{ ucfirst(macros.hisOrHer(person)) }} albums:
+							{% v 0.5 %}
+								{{ ucfirst(macros.hisOrHer(person)) }} discography includes:
+							{% v 0.5 %}
+								{{ ucfirst(macros.hisOrHer(person)) }} most {{ vary(person.name, ['important', 'well known', 'recognized']) }} albums:
+							{% v 0.5 %}
+								Discography:
+							{% v 0.2 %}
+								Related albums:
+							{% endvary %}
+							{{ andconcat(person['/music/artist/album']|slice(0, 10)) }}.
+						{% endif %}
+
+						{% if person['/music/artist/genre'] is known %}
+							{% vary person.name %}
+								Genres:
+							{% v 1 %}
+								Genres {{ macros.heOrShe(person) }} performed:
+							{% v 1 %}
+								Genres {{ macros.heOrShe(person) }} performed include
+							{% v 0.5 %}
+								{{ ucfirst(macros.hisOrHer(person)) }} related genres:
+							{% v 0.5 %}
+								Genres related to {{ macros.himOrHer(person) }}:
+							{% endvary %}
+							{{ andconcat(person['/music/artist/genre']) }}.
+						{% endif %}
+					</p>
+					<p>
+						{% include 'wikimore.twig' with {'person': person} %}
+					</p>
+				{% endfor %}
+
+				<h2>Related articles</h2>
+
+				<!--RELATED
+
+				RELATED-->
+
+			{% endpage %}
+
+		{% endif %}
+
+	{% endfor %}
+
+{% endfor %}
+{% endspaceless %}

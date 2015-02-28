@@ -4,7 +4,7 @@ DONE [nationality/famous] actors died in [year]
 [nationality/famous] actors born on [day] [month]
 DONE [nationality/famous] actors died in [cause (cancer, drug overdose, traffic)]
 
-Everything else with musicians
+Everything else with musicians, models, directors, poets, writers
 
 [{
   "ns0:profession": "Actor",
@@ -24,3 +24,42 @@ Everything else with musicians
   "/people/deceased_person/cause_of_death": [],
   "n0:/people/deceased_person/cause_of_death": []
 }]
+
+
+
+[{
+  "type": "/music/genre",
+  "name": null
+}]
+
+
+[{
+  "/people/person/profession": [],
+  "/music/artist/genre": [{
+    "name": null
+  }],
+  "limit": 50,
+  "*": null,
+  "id": null,
+  "type": "/music/artist",
+  "/people/person/nationality": [{
+    "name": "United States of America",
+    "/location/location/adjectival_form": []
+  }],
+  "/common/topic/alias": [],
+  "/people/deceased_person/date_of_death": null,
+  "/people/deceased_person/place_of_death": null,
+  "wiki:key": [{
+    "namespace": "/wikipedia/en_id",
+    "value": null,
+    "limit": 1
+  }]
+}]
+
+
+
+
+time bin/generate musicians_nationality_cause_of_death.twig ../../ptcpages/_posts
+jekyll build
+cd _site
+python -m SimpleHTTPServer
