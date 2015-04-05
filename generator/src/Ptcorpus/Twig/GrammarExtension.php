@@ -125,10 +125,14 @@ class GrammarExtension extends \Twig_Extension
     }
 
     public function getAge($dateOfBirth, $dateOfDeath) {
-        $date1 = new \DateTime($dateOfBirth);
-        $date2 = new \DateTime($dateOfDeath);
-        $interval = $date1->diff($date2);
-        return $interval->y;
+        try {
+            $date1 = new \DateTime($dateOfBirth);
+            $date2 = new \DateTime($dateOfDeath);
+            $interval = $date1->diff($date2);
+            return $interval->y;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public static function pluralize($word)

@@ -42,22 +42,35 @@ foreach ($htmlFiles as $htmlFile)
 }
 
 $count = 1;
+$childrenCount = 30;
 
-foreach ($htmlFiles as $htmlFile)
+$htmlFilesChunks = array_chunk($htmlFiles, round(count($htmlFiles) / $childrenCount));
+
+foreach ($htmlFilesChunks as $chunk)
 {
-	echo "Generating ", $count, "/", count($htmlFiles), "\n";
+	if (pcntl_fork() == 0) {
+		foreach ($chunk as $htmlFile) {
+			echo "Generating ", $count, "/", count($htmlFiles), "\n";
 
-	$path = realpath($htmlFile->getPathName());
-	$relatedArticlesHtml = $relatedArticles->getRelatedArticles($path, 6);
-	$content = file_get_contents($path);
+			$path = realpath($htmlFile->getPathName());
+			$relatedArticlesHtml = $relatedArticles->getRelatedArticles($path, 6);
+			$content = file_get_contents($path);
 
-	$content = preg_replace(
-		'/(\<\!\-\-RELATED).*?(RELATED\-\-\>)/s',
-		'$1 -->' . $relatedArticlesHtml . '<!-- $2',
-		$content
-	);
+			$content = preg_replace(
+				'/(\<\!\-\-RELATED).*?(RELATED\-\-\>)/s',
+				'$1 -->' . $relatedArticlesHtml . '<!-- $2',
+				$content
+			);
 
-	file_put_contents($path, $content);
+			file_put_contents($path, $content);
 
-	$count++;
+			$count++;
+		}
+		die();
+	}
+}
+
+while ($childrenCount && pcntl_wait($status)) {
+	echo "Child finished, left: $childrenCount\n";
+	$childrenCount--;
 }

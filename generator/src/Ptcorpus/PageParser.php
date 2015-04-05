@@ -13,7 +13,7 @@ class PageParser
 			return array();
 		}
 
-		return preg_split('/\s*,\s*/', $headerValues['keywords']);
+		return preg_split('/\s*,\s*/', $headerValues['keywords'], -1, PREG_SPLIT_NO_EMPTY);
 	}
 
 	public function getTitle($path)

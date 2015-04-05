@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+ini_set('memory_limit','512M');
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

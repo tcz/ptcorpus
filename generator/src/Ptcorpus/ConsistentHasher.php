@@ -21,8 +21,7 @@ class ConsistentHasher
 
 	public function getAssociated($item, $count)
 	{
-		$uniqueItems 		= array_unique($this->items);
-		$count 				= min(count($uniqueItems), $count);
+		$count 				= min(count($this->items), $count);
 		$reached 			= false;
 		$associatedItems 	= array();
 		$itemHash 			= $this->hash($item);

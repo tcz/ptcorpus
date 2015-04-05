@@ -4,7 +4,7 @@ namespace Ptcorpus;
 
 class RelatedArticles
 {
-	private $pagesWithKeywords = array();
+	private $keywordsToPages = array();
 	private $pageParser;
 
 	public function __construct(PageParser $pageParser)
@@ -14,27 +14,37 @@ class RelatedArticles
 
 	public function clear()
 	{
-		$this->pagesWithKeywords = array();
+		$this->keywordsToPages = array();
 	}
 
 	public function addPage($path)
 	{
-		$this->pagesWithKeywords[$path] = $this->pageParser->getKeywords($path);
+		$keywords = $this->pageParser->getKeywords($path);
+
+		foreach ($keywords as $keyword) {
+			if (!isset($this->keywordsToPages[$keyword])) {
+				$this->keywordsToPages[$keyword] = array();
+			}
+
+			$this->keywordsToPages[$keyword][] = $path;
+		}
 	}
 
 	public function getRelatedArticles($mainPath, $numberOfArticles)
 	{
-		if (!isset($this->pagesWithKeywords[$mainPath])) {
-			throw new \LogicException("$mainPath has to be added first.");
+		$keywords = $this->pageParser->getKeywords($mainPath);
+		$relatedPaths = array();
+
+		foreach ($keywords as $keyword) {
+			if (isset($this->keywordsToPages[$keyword])) {
+				$relatedPaths = array_merge($relatedPaths, $this->keywordsToPages[$keyword]);
+			}
 		}
 
 		$hasher = new ConsistentHasher;
-
-		foreach ($this->pagesWithKeywords as $path => $keywords) {
-			$commonKeywords = array_intersect($keywords, $this->pagesWithKeywords[$mainPath]);
-			for ($i=0; $i < count($commonKeywords); $i++) {
-				$hasher->addItem($path);
-			}
+		// Duplicates are fine here.
+		foreach ($relatedPaths as $path) {
+			$hasher->addItem($path);
 		}
 
 		$html = "<ul class='related'>";
