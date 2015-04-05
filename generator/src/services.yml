@@ -62,3 +62,8 @@ services:
         class: Ptcorpus\StaffPicks
         arguments:
             - @ptcorpus.page_parser
+
+    ptcorpus.dropdown:
+        class: Ptcorpus\Dropdown
+        arguments:
+            - @ptcorpus.page_parser

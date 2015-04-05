@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+$container 		= new ContainerBuilder();
+$container->setParameter('base_path', __DIR__.'/../');
+$loader 		= new YamlFileLoader($container, new FileLocator(array(__DIR__ . '/../src')));
+
+$loader->load('services.yml');
+
+$destination = $argv[1];
+$pagesPath = $argv[2];
+$patterns = $argv[3];
+
+if (!is_dir($pagesPath)) {
+	throw new Exception("$pagesPath must be a directory");
+}
+
+$dropdown = $container->get('ptcorpus.dropdown');
+
+$directory = new RecursiveDirectoryIterator($pagesPath);
+$iterator = new RecursiveIteratorIterator($directory);
+$htmlFiles = new RegexIterator($iterator, '/^.+\.html$/i');
+
+$dropdown->clear();
+$htmlFiles = iterator_to_array($htmlFiles);
+
+$patterns = preg_split('/\r?\n\r?/', file_get_contents($patterns), -1, PREG_SPLIT_NO_EMPTY);
+
+foreach ($patterns as $pattern) {
+	$dropdown->addPattern($pattern);
+}
+
+$count = 1;
+foreach ($htmlFiles as $htmlFile)
+{
+	$path = realpath($htmlFile->getPathName());
+	$dropdown->addPage($path);
+
+	$count++;
+}
+
+$drowndowns = $dropdown->getDropdowns();
+
+$content = file_get_contents($destination);
+
+$content = preg_replace(
+	'/(\<\!\-\-CATS).*?(CATS\-\-\>)/s',
+	'$1 -->' . $drowndowns . '<!-- $2',
+	$content
+);
+
+file_put_contents($destination, $content);

@@ -63,3 +63,9 @@ time bin/generate musicians_nationality_cause_of_death.twig ../../ptcpages/_post
 jekyll build
 cd _site
 python -m SimpleHTTPServer
+
+
+
+bin/addrelated ../../ptcpages/_posts/
+bin/pickstaff ../../ptcpages/index.html ../../ptcpages/_posts
+bin/generatedropdowns ../../ptcpages/index.html ../../ptcpages/_posts ../pages/patterns.txt

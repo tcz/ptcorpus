@@ -19,16 +19,12 @@
 
 {% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
 
-	{% set causes_of_death = freebase('[{
-	  "limit": 1000,
-	  "name": null,
-	  "type": "/people/cause_of_death"
-	}]') %}
+	{% set years = range(1900, 2000) %}
 
-	{% for cause_of_death in causes_of_death %}
-		{% set cause_of_death = cause_of_death.name %}
+	{% for year in years %}
 
-		{% set people = freebase('[{
+		{% set people = freebase('
+		[{
 		  "/people/person/profession": [],
 		  "/music/artist/genre": [],
 		  "/music/artist/album": [],
@@ -47,60 +43,52 @@
 		  "/people/person/place_of_birth": null,
 		  "/people/person/date_of_birth": null,
 		  "/people/person/gender": null,
-		  "n0:/people/deceased_person/cause_of_death": [{
-		    "name": "' ~ cause_of_death ~ '"
-		  }],
+		  "n0:/people/person/date_of_birth>=": "' ~ year ~ '-01-01",
+		  "n0:/people/person/date_of_birth<=": "' ~ year ~ '-12-31",
 		  "wiki:key": [{
 		    "namespace": "/wikipedia/en_id",
 		    "value": null,
 		    "limit": 1
 		  }]
-		}]') %}
+		}]
+		') %}
 
-		{% if people|length >= 1 %}
+			{% if people|length >= 5 %}
 
-			{% page
-				title country['/location/location/adjectival_form'].0 ~ ' musicians died in ' ~ cause_of_death
-				keywords ['musician', 'music star', people.0.name, people.2.name, country.name, cause_of_death, 'died']
-				description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' music stars who died in ' ~ cause_of_death
-			%}
+				{% page
+					title country['/location/location/adjectival_form'].0 ~ ' musicians born in ' ~ year
+					keywords ['musician', 'music star', people.0.name, people.2.name, country.name, year, 'born']
+					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ '  music stars who died in who were born in ' ~ year
+				%}
 
-				<h1>
-					{% vary country.name %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						musicians died in
-						{{ cause_of_death }}
-					{% v 1 %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						music stars died in
-						{{ cause_of_death }}
-					{% v 1 %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						music stars died as a result of
-						{{ cause_of_death }}
-					{% v 1 %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						musicians died because of
-						{{ cause_of_death }}
-					{% v 1 %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						musicians who died due to
-						{{ cause_of_death }}
-					{% v 0.5 %}
-						{{ country['/location/location/adjectival_form'].0 }}
-						music stars deceased in
-						{{ cause_of_death }}
-					{% endvary %}
-				</h1>
+					<h1>
+						{% vary country.name %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							musicians born in
+							{{ year }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							music stars born in
+							{{ year }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							musicians who were born in
+							{{ year }}
+						{% v 0.5 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							musicians born in the year
+							{{ year }}
+						{% endvary %}
+					</h1>
 
-				<p>Here are {{ people|length }} famous musicians from {{ country.name }} died in {{ cause_of_death }}:</p>
+					<p>Here are {{ people|length }} famous musicians from {{ country.name }} were born in {{ year }}:</p>
 
-				{% for person in people %}
-					<h2>{{ person.name }}</h2>
-					<p>
-						{% include 'quickbio.twig' with {'person': person} %}
-					</p>
-					<p>
+					{% for person in people %}
+						<h2>{{ person.name }}</h2>
+						<p>
+							{% include 'quickbio.twig' with {'person': person} %}
+						</p>
+						<p>
 						{% if person['/music/artist/album'] is known %}
 							{% vary person.name %}
 								{{ ucfirst(macros.hisOrHer(person)) }} albums include
@@ -133,20 +121,20 @@
 							{{ andconcat(person['/music/artist/genre']) }}.
 						{% endif %}
 					</p>
-					<p>
-						{% include 'wikimore.twig' with {'person': person} %}
-					</p>
-				{% endfor %}
+						<p>
+							{% include 'wikimore.twig' with {'person': person} %}
+						</p>
+					{% endfor %}
 
-				<h2>Related articles</h2>
+					<h2>Related articles</h2>
 
-				<!--RELATED
+					<!--RELATED
 
-				RELATED-->
+					RELATED-->
 
-			{% endpage %}
+				{% endpage %}
 
-		{% endif %}
+			{% endif %}
 
 	{% endfor %}
 

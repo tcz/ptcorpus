@@ -1,0 +1,5 @@
+/^([a-zA-Z ]+) ([a-z]+s) born in (\d+)$/
+/^([a-zA-Z ]+) ([a-z]+s) died in (\d+)$/
+/^([a-zA-Z ]+) ([a-z]+s) died at age (\d+)$/
+/^([a-zA-Z ]+) ([a-z]+s) died before turning (\d+)$/
+/^([a-zA-Z ]+) ([a-z]+s) died in ([a-zA-Z0-9 ]+)$/

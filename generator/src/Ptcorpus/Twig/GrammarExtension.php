@@ -16,6 +16,7 @@ class GrammarExtension extends \Twig_Extension
             new \Twig_SimpleFunction('numbertostring', array($this, 'numberToString')),
             new \Twig_SimpleFunction('pluralize', array($this, 'pluralize')),
             new \Twig_SimpleFunction('year', array($this, 'year')),
+            new \Twig_SimpleFunction('getage', array($this, 'getAge')),
         );
     }
 
@@ -121,6 +122,13 @@ class GrammarExtension extends \Twig_Extension
             default:
                 return $number;
         }
+    }
+
+    public function getAge($dateOfBirth, $dateOfDeath) {
+        $date1 = new \DateTime($dateOfBirth);
+        $date2 = new \DateTime($dateOfDeath);
+        $interval = $date1->diff($date2);
+        return $interval->y;
     }
 
     public static function pluralize($word)

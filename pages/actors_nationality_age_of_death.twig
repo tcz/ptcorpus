@@ -1,0 +1,131 @@
+{% spaceless %}
+{% import "macros.twig" as macros %}
+
+{% set genders = {'female': 'actress', 'male': 'actor'} %}
+
+{% set countries_over_1m = freebase('[{
+  "/location/statistical_region/population": [{
+    "number>": 1000000,
+    "limit": 1,
+    "number": null
+  }],
+  "name": null,
+  "type": "/location/country",
+  "/location/location/adjectival_form": []
+}]') %}
+
+{% set countries_over_1m = countries_over_1m|merge([{
+	'name': 'the world',
+	'/location/location/adjectival_form': ['Famous']
+}]) %}
+
+{% for country in countries_over_1m if country['/location/location/adjectival_form']|length > 0 %}
+
+	{% for gender, profession_name in genders %}
+
+		{% set pluralized_profession_name = pluralize(profession_name) %}
+
+		{% set people_batch = freebase('[{
+		  "ns0:profession": "Actor",
+		  "/people/person/profession": [],
+		  "*": null,
+		  "id": null,
+		  "limit": 999,
+		  "/people/person/gender": "' ~ gender ~ '",
+		  "type": "/people/person",
+		  "/people/person/nationality": [{
+		    "name": ' ~ (country.name == 'the world' ? 'null' : '"' ~ country.name ~ '"' ) ~ ',
+		    "/location/location/adjectival_form": []
+		  }],
+		  "/common/topic/alias": [],
+		  "/people/deceased_person/date_of_death": null,
+		  "/people/deceased_person/place_of_death": null,
+		  "/people/person/place_of_birth": null,
+		  "/people/person/date_of_birth": null,
+		  "/people/deceased_person/cause_of_death": [],
+		  "n0:/people/deceased_person/date_of_death": {
+		    "type": "/type/datetime",
+		    "value": null,
+		    "optional": false
+		  },
+		  "/people/person/children": [],
+		  "wiki:key": [{
+		    "namespace": "/wikipedia/en_id",
+		    "value": null,
+		    "limit": 1
+		  }]
+		}]') %}
+
+		{% set ages = range(18, 80) %}
+
+		{% for age in ages %}
+			{% set people = {} %}
+
+			{% for person in people_batch %}
+				{% set person_age = getage(person['/people/person/date_of_birth'], person['/people/deceased_person/date_of_death']) %}
+				{% if person_age == age %}
+					{% set people = people|merge([person]) %}
+				{% endif %}
+			{% endfor %}
+
+			{% if people|length >= 1 %}
+
+				{% page
+					title country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' died at age ' ~ age
+					keywords [profession_name, people.0.name, people.2.name, country.name, 'at ' ~ age, 'died']
+					description "List of the top " ~ people|length ~ " " ~ country['/location/location/adjectival_form'].0 ~ ' ' ~ pluralized_profession_name ~ ' who died when they were ' ~ age
+				%}
+
+					<h1>
+						{% vary country.name %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							movie stars died at
+							{{ age }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							{{ pluralized_profession_name }} died at age
+							{{ age }}
+						{% v 1 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							{{ pluralized_profession_name }} who deceased at age
+							{{ age }}
+						{% v 0.5 %}
+							{{ country['/location/location/adjectival_form'].0 }}
+							movie {{ pluralized_profession_name }} died when they were
+							{{ age }}
+						{% endvary %}
+					</h1>
+
+					<p>Here are {{ people|length }} famous {{ pluralized_profession_name }} from {{ country.name }} died at {{ age }}:</p>
+
+					{% for person in people %}
+						<h2>{{ person.name }}</h2>
+						<p>
+							{% include 'quickbio.twig' with {'person': person} %}
+						</p>
+						{% if person['/people/deceased_person/cause_of_death'] is known %}
+						<p>
+							{{ ucfirst(macros.heOrShe(person)) }} died {{ vary(person.name, ['in', 'caused by', 'as a result of']) }} {{ person['/people/deceased_person/cause_of_death'][0]|lower }}.
+						</p>
+						{% endif %}
+						<p>
+							{% include 'wikimore.twig' with {'person': person} %}
+						</p>
+					{% endfor %}
+
+					<h2>Related articles</h2>
+
+					<!--RELATED
+
+					RELATED-->
+
+				{% endpage %}
+
+			{% endif %}
+
+		{% endfor %}
+
+	{% endfor %}
+
+{% endfor %}
+{% endspaceless %}
